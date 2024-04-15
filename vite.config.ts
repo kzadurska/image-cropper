@@ -5,6 +5,7 @@ export default defineConfig((configEnv) => {
 	const isDevelopment = configEnv.mode === "development";
 
 	return {
+		base: "/image-cropper/",
 		plugins: [react()],
 		css: {
 			modules: {

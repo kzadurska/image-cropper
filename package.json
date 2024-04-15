@@ -1,6 +1,6 @@
 {
-  "name": "@codelytv/vite-react_best_practices-template",
-  "author": "codelytv",
+  "name": "image-cropper",
+  "author": "kzadurska",
   "license": "MIT",
   "private": true,
   "version": "1.0.0",

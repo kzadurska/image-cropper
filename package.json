@@ -5,6 +5,7 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
+    "gh-pages": "^6.1.1",
     "react": "^18.2.0",
     "react-advanced-cropper": "^0.19.6",
     "react-dom": "^18.2.0"
@@ -17,7 +18,9 @@
     "cy:run": "cypress run",
     "lint": "eslint --ignore-path .gitignore . && stylelint **/*.scss",
     "lint:fix": "eslint --fix --ignore-path .gitignore . && stylelint --fix **/*.scss",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

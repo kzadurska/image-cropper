@@ -8,6 +8,7 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 
 	// TODO: https://unsplash.com/developers get image from api
 	// TODO: add option to upload image
+	// generate background
 	const [image] = useState(
 		"https://images.unsplash.com/photo-1599140849279-1014532882fe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1300&q=80"
 	);

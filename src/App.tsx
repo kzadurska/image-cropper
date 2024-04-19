@@ -4,7 +4,14 @@ import { useState } from "react";
 
 import { CropImage } from "./sections/crop-image/CropImage";
 
-const PREDEFINED_CROP_SIZES = ["400x400", "932x125", "1080x288", "1600x350", "1536x500"];
+const PREDEFINED_CROP_SIZES = [
+	"400x400",
+	"932x125",
+	"1080x288",
+	"1600x350",
+	"1536x500",
+	" 1280x720",
+];
 
 export function App() {
 	const [predefinedSize, setPredefinedSize] = useState(PREDEFINED_CROP_SIZES[0]);

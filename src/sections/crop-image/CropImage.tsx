@@ -20,6 +20,8 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 	// TODO: add option to upload image
 	// generate background like canvas gradient
 	const [image] = useState(IMAGE_URLS[pseudoRandomImageIndex]);
+	const [fileSize, setFileSize] = useState(0);
+	const [imageUrl, setImageUrl] = useState("");
 
 	const getDimensionsFromSize = (): { width: number; height: number } => {
 		const [width, height] = predefinedSize.split("x");
@@ -27,22 +29,28 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 		return { width: parseInt(width, 10), height: parseInt(height, 10) };
 	};
 
+	const getImageUrl = () =>
+		cropperRef.current?.getCanvas(getDimensionsFromSize())?.toDataURL() ?? "";
+
 	const onDownload = () => {
 		if (cropperRef.current) {
 			const linkElement = document.createElement("a");
 			linkElement.download = `${predefinedSize}.png`;
-			linkElement.href = cropperRef.current.getCanvas(getDimensionsFromSize())?.toDataURL() ?? "";
+			linkElement.href = getImageUrl();
 			linkElement.click();
 		}
+	};
+
+	const displayFileSize = () => {
+		const size = 0;
+		setFileSize(size); // onupdate?
 	};
 
 	const onOpenInTab = () => {
 		if (cropperRef.current) {
 			const newTab = window.open();
 			if (newTab) {
-				newTab.document.body.innerHTML = `<img src="${
-					cropperRef.current.getCanvas(getDimensionsFromSize())?.toDataURL() ?? ""
-				}"/>`;
+				newTab.document.body.innerHTML = `<img src="${getImageUrl()}"/>`;
 			}
 		}
 	};
@@ -51,7 +59,11 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 		<>
 			<button onClick={onDownload}>download cropped</button>
 			<button onClick={onOpenInTab}>open in new tab</button>
+			<p>
+				elo {fileSize} {imageUrl}
+			</p>
 			<FixedCropper
+				onInteractionEnd={() => setImageUrl(getImageUrl())}
 				transformImage={{ adjustStencil: false }}
 				src={image}
 				ref={cropperRef}
@@ -63,6 +75,7 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 				}}
 				stencilSize={getDimensionsFromSize()}
 			/>
+			<input id="image" type="image" width="100" height="30" alt="" src={getImageUrl()} />
 		</>
 	);
 };
@@ -72,4 +85,8 @@ function getRandomInt(min: number, max: number) {
 	const maxFloored = Math.floor(max);
 
 	return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+}
+
+function getByteLength(file: string | URL) {
+	return 0;
 }

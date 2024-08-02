@@ -16,12 +16,11 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 	const cropperRef = useRef<FixedCropperRef>(null);
 	const pseudoRandomImageIndex = getRandomInt(0, 5);
 
-	// TODO: https://unsplash.com/developers get image from api
+	// TODO: https://unsplash.com/devsizepers get image from api
 	// TODO: add option to upload image
 	// generate background like canvas gradient
 	const [image] = useState(IMAGE_URLS[pseudoRandomImageIndex]);
 	const [fileSize, setFileSize] = useState(0);
-	const [imageUrl, setImageUrl] = useState("");
 
 	const getDimensionsFromSize = (): { width: number; height: number } => {
 		const [width, height] = predefinedSize.split("x");
@@ -41,11 +40,6 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 		}
 	};
 
-	const displayFileSize = () => {
-		const size = 0;
-		setFileSize(size); // onupdate?
-	};
-
 	const onOpenInTab = () => {
 		if (cropperRef.current) {
 			const newTab = window.open();
@@ -55,15 +49,23 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 		}
 	};
 
+	const handleInteractionEnd = () => {
+		try {
+			getByteLength(getImageUrl())
+				.then((size) => setFileSize(size))
+				.catch((error) => console.error("Error getting byte length:", error));
+		} catch (error) {
+			console.error("Error getting byte length:", error);
+		}
+	};
+
 	return (
 		<>
 			<button onClick={onDownload}>download cropped</button>
 			<button onClick={onOpenInTab}>open in new tab</button>
-			<p>
-				elo {fileSize} {imageUrl}
-			</p>
+			<p>size {Math.round(fileSize / 1024)} kB</p>
 			<FixedCropper
-				onInteractionEnd={() => setImageUrl(getImageUrl())}
+				onInteractionEnd={handleInteractionEnd}
 				transformImage={{ adjustStencil: false }}
 				src={image}
 				ref={cropperRef}
@@ -75,7 +77,6 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 				}}
 				stencilSize={getDimensionsFromSize()}
 			/>
-			<input id="image" type="image" width="100" height="30" alt="" src={getImageUrl()} />
 		</>
 	);
 };
@@ -87,6 +88,16 @@ function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 }
 
-function getByteLength(file: string | URL) {
-	return 0;
+async function getByteLength(url: string | URL) {
+	let fileSize = 0;
+
+	try {
+		const response = await fetch(url);
+		const blob = await response.blob();
+		fileSize = blob.size;
+	} catch (error) {
+		console.error(error);
+	}
+
+	return fileSize;
 }

@@ -10,14 +10,15 @@ const PREDEFINED_CROP_SIZES = [
 	"1080x288",
 	"1600x350",
 	"1536x500",
-	" 1280x720",
+	"1280x720",
 ];
 
 export function App() {
 	const [predefinedSize, setPredefinedSize] = useState(PREDEFINED_CROP_SIZES[0]);
 	// TODO allow any dimensions user chooses
 
-	const selectSize = (event) => setPredefinedSize(event.target.value);
+	const selectSize = (event: React.ChangeEvent<HTMLSelectElement>) =>
+		setPredefinedSize(event.target.value);
 
 	return (
 		<div className="App">

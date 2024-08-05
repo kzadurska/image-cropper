@@ -3,6 +3,9 @@ import "react-advanced-cropper/dist/style.css";
 import { useRef, useState } from "react";
 import { FixedCropper, FixedCropperRef } from "react-advanced-cropper";
 
+const NASA_API_IMAGE_URL =
+	"https://api.nasa.gov/planetary/apod?api_key=sNDfW8rGIEdGUK8e5aX5VdbGM2RGN2DOM1JEISLn&count=1";
+
 const IMAGE_URLS = [
 	"https://images.unsplash.com/photo-1695576514502-cbc0a333f2d9?q=80&w=2680&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 	"https://images.unsplash.com/photo-1712785021787-72b6d6c837e8?q=80&w=2565&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -19,7 +22,7 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 	// TODO: https://unsplash.com/devsizepers get image from api
 	// TODO: add option to upload image
 	// generate background like canvas gradient
-	const [image] = useState(IMAGE_URLS[pseudoRandomImageIndex]);
+	const [image, setImage] = useState(IMAGE_URLS[pseudoRandomImageIndex]);
 	const [fileSize, setFileSize] = useState(0);
 
 	const getDimensionsFromSize = (): { width: number; height: number } => {
@@ -58,6 +61,12 @@ export const CropImage = ({ predefinedSize }: { predefinedSize: string }) => {
 			console.error("Error getting byte length:", error);
 		}
 	};
+
+	// useEffect(() => {
+	// 	fetchNasaImage()
+	// 		.then((url) => setImage(url))
+	// 		.catch((error) => console.error("Error fetching data:", error));
+	// }, []);
 
 	return (
 		<>
@@ -100,4 +109,19 @@ async function getByteLength(url: string | URL) {
 	}
 
 	return fileSize;
+}
+
+async function fetchNasaImage(): Promise<string> {
+	try {
+		const response = await fetch(NASA_API_IMAGE_URL);
+		const data = await response.json();
+		const imageUrl = data[0].url;
+		console.log(imageUrl);
+
+		return imageUrl as string;
+	} catch (error) {
+		console.error("Error fetching NASA image:", error);
+	}
+
+	return "";
 }
